@@ -5,8 +5,8 @@
 FROM blueimp/basedriver
 
 # Install chromedriver (which depends on chromium):
-RUN DEBIAN_FRONTEND=noninteractive \
-  apt-get update \
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
   && apt-get install --no-install-recommends --no-install-suggests -y \
     chromedriver \
   # Start chromium via wrapper script with --no-sandbox argument:
