@@ -31,3 +31,5 @@ USER webdriver
 ENTRYPOINT ["entrypoint", "chromedriver"]
 
 CMD ["--port=4444", "--whitelisted-ips="]
+
+EXPOSE 4444
