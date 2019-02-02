@@ -28,4 +28,6 @@ RUN ln -s /usr/lib/chromium/chromedriver /usr/local/bin/
 
 USER webdriver
 
-CMD ["chromedriver", "--port=4444", "--whitelisted-ips="]
+ENTRYPOINT ["entrypoint", "chromedriver"]
+
+CMD ["--port=4444", "--whitelisted-ips="]
