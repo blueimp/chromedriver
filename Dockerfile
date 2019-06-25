@@ -21,6 +21,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && VERSION=$(curl -sL "$BASE_URL/LATEST_RELEASE") \
   && curl -sL "$BASE_URL/$VERSION/chromedriver_linux64.zip" -o /tmp/driver.zip \
   && unzip /tmp/driver.zip \
+  && chmod 755 chromedriver \
   && mv chromedriver /usr/local/bin/ \
   # Remove obsolete files:
   && apt-get autoremove --purge -y \
