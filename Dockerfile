@@ -7,11 +7,13 @@ FROM blueimp/basedriver
 # Install the latest versions of Google Chrome and Chromedriver:
 RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install \
+  && apt-get install --no-install-recommends --no-install-suggests -y \
     unzip \
-  && \
-  DL=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-  && curl -sL "$DL" > /tmp/chrome.deb \
+    gnupg \
+  && GOOGLE_LINUX_DL=https://dl.google.com/linux \
+  && curl -sL "$GOOGLE_LINUX_DL/linux_signing_key.pub" | apt-key add - \
+  && curl -sL "$GOOGLE_LINUX_DL/direct/google-chrome-stable_current_amd64.deb" \
+    > /tmp/chrome.deb \
   && apt install --no-install-recommends --no-install-suggests -y \
     /tmp/chrome.deb \
   && CHROMIUM_FLAGS='--no-sandbox --disable-dev-shm-usage' \
@@ -26,6 +28,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   # Remove obsolete files:
   && apt-get autoremove --purge -y \
     unzip \
+    gnupg \
   && apt-get clean \
   && rm -rf \
     /tmp/* \
