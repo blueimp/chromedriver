@@ -10,6 +10,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get install --no-install-recommends --no-install-suggests -y \
     unzip \
     gnupg \
+    # Reverse proxy for chromedriver:
+    nginx \
   && GOOGLE_LINUX_DL=https://dl.google.com/linux \
   && curl -sL "$GOOGLE_LINUX_DL/linux_signing_key.pub" | apt-key add - \
   && curl -sL "$GOOGLE_LINUX_DL/direct/google-chrome-stable_current_amd64.deb" \
@@ -37,10 +39,21 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     /var/lib/apt/lists/* \
     /var/tmp/*
 
+# Configure nginx to run in a container context:
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+RUN cd /var/lib/nginx && mkdir body proxy fastcgi uwsgi scgi
+RUN touch /run/nginx.pid && chown -R webdriver:webdriver /run/nginx.pid
+
+COPY nginx.conf /etc/nginx/
+COPY reverse-proxy.sh /usr/local/bin/reverse-proxy
+
 USER webdriver
 
-ENTRYPOINT ["entrypoint", "chromedriver"]
+ENTRYPOINT ["entrypoint", "reverse-proxy", "chromedriver"]
 
-CMD ["--port=4444", "--whitelisted-ips="]
+# Bind chromedriver to port 5555:
+CMD ["--port=5555"]
 
+# Expose nginx on port 4444, forwarding to chromedriver on port 5555:
 EXPOSE 4444
