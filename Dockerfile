@@ -42,7 +42,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # Configure nginx to run in a container context:
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
-RUN cd /var/lib/nginx && mkdir body proxy fastcgi uwsgi scgi
+RUN chown -R webdriver:webdriver /var/lib/nginx
 RUN touch /run/nginx.pid && chown -R webdriver:webdriver /run/nginx.pid
 
 COPY nginx.conf /etc/nginx/
