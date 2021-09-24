@@ -24,8 +24,6 @@ version: "3.7"
 services:
   chromedriver:
     image: blueimp/chromedriver
-    # Start the container with an init process:
-    init: true
     # Mount the /tmp partition as tmpfs:
     tmpfs: /tmp
     environment:
